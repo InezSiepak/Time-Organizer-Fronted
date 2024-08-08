@@ -11,23 +11,23 @@ const Administrator = () => {
   const [users, setUsers] = useState([]);
 
   console.log(users);
-    const columns = [
-      {
-        name: "Nombre",
-        selector: row => row.username,
-        sortable: true
-      },
-      {
-        name: "Email",
-        selector: row => row.email,
-        sortable: true
-      },
-      {
-        name: "Última conexión",
-        selector: row => row.updatedAt,
-        sortable: true
-      },
-    ]
+  const columns = [
+    {
+      name: "Nombre",
+      selector: (row) => row.username,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: "Última conexión",
+      selector: (row) => row.updatedAt,
+      sortable: true,
+    },
+  ];
   const data = [
     {
       username: "beatriz",
@@ -48,29 +48,33 @@ const Administrator = () => {
       username: "lolito",
       email: "ejemplo3@gmail.com",
       updatedAt: "2024-08-05 14:40:50",
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}users/`, {
-          method: "GET",
-          headers: {
-            Authorization: localStorage.getItem("AUTH_TOKEN_TJ"),
-          },
-        });
-        await response.json();
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}users/`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("AUTH_TOKEN_TJ"),
+            },
+          }
+        );
+        const info = await response.json();
 
         //setUsers(response.data);
-        /*
-        setUsers(users.map(users => ({
-          username: users.username,
-          email: users.email,
-          role: users.role,
-          updatedAt: users.updatedAt,
-        })));
-        */
+
+        setUsers(
+          info.users.map((users) => ({
+            username: users.username,
+            email: users.email,
+            role: users.role,
+            updatedAt: users.updatedAt,
+          }))
+        );
       } catch (error) {
         showErrorToast("Error al cargar los usuarios.");
       }
@@ -111,7 +115,7 @@ const Administrator = () => {
   useEffect(() => {
     !currentUser && navigate("/login");
   }, [currentUser]);
-  
+
   return (
     <div className="relative sm:w-[70vw] bg-black border-solid border-2 border-black rounded-3xl place-content-center">
       <Header />
@@ -124,21 +128,20 @@ const Administrator = () => {
             >
               Volver
             </button>
-          </div> 
-        <div className="flex  flex-col h-full w-full md:w-[30vw] justify-evenly content-center">
-          
-          <div>
-            <DataTable  
-              title= "VISUALIZAR USUARIOS"                 
-              columns={columns}
-              data={data}
-              selectableRows
-              pagination
-              paginationPerPage={8}
-              fixedHeader
-            />
-          </div> 
-        </div>
+          </div>
+          <div className="flex  flex-col h-full w-full md:w-[30vw] justify-evenly content-center">
+            <div>
+              <DataTable
+                title="VISUALIZAR USUARIOS"
+                columns={columns}
+                data={users}
+                selectableRows
+                pagination
+                paginationPerPage={8}
+                fixedHeader
+              />
+            </div>
+          </div>
         </div>
         <div className="flex flex-col items-center md:justify-end md:bg-fondo rounded-br-3xl h-[8vh] md:h-full py-4 md:w-[22vw] lg:w-[20vw] md:space-y-20">
           <button
@@ -163,7 +166,6 @@ const Administrator = () => {
             Eliminar
           </button>
         </div>
-      
       </section>
     </div>
   );

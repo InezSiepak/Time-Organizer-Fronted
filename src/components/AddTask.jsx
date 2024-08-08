@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { showErrorToast, showSuccessToast } from "../utils/toastUtils"; // Importa tus funciones de toastUtils
-
+import { useTranslation } from "react-i18next";
 const AddTask = ({ setAddTask }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -10,7 +10,7 @@ const AddTask = ({ setAddTask }) => {
   const [families, setFamilies] = useState([]);
   const [colorId, setColorId] = useState(null); // Asegúrate de que el valor inicial sea null
   const [familyId, setFamilyId] = useState(null); // Asegúrate de que el valor inicial sea null
-
+  const { t } = useTranslation();
   const getColorIdByName = (colorName) => {
     const color = colores.find(
       (c) => c.name.toLowerCase() === colorName.toLowerCase()
@@ -239,7 +239,7 @@ const AddTask = ({ setAddTask }) => {
             />
             <datalist id="color">
               {colores.map((co, i) => (
-                <option key={i} value={co.name} />
+                <option key={i} value={t(co.name)} />
               ))}
             </datalist>
           </div>
